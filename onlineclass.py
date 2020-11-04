@@ -6,10 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
-from teachers import glossa, maths , relegion, aoth, aepp, history, english 
 
-
-opt = Options()
 opt.add_argument("--disable-infobars")
 opt.add_argument("start-maximized")
 opt.add_argument("--disable-extensions")
@@ -28,7 +25,7 @@ class   onlineclass():
     def __init__(self):
         self.driver = webdriver.Chrome(chrome_options=opt, executable_path=r'D:\TOOLS-ISO-PROGGRAMING\project\onlineclass\chromedriver.exe')
     def login(self):
-        self.driver.get(glossa) 
+        self.driver.get('https://meetingsemea25.webex.com/meet/pr1524685744') 
         sleep(5) 
 
         join_from_browser = self.driver.find_element_by_xpath('//*[@id="push_download_join_by_browser"]')

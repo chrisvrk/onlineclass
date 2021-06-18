@@ -6,7 +6,25 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+import pandas as pd 
+import datetime
 
+currentday = str(datetime.datetime.now().strftime("%A")).lower()
+currenthour=str(datetime.datetime.now())
+df = pd.read_excel("program.xls") 
+today = df["day"] == currentday
+
+for i in range (0,5) :
+    if today[i] == True :
+        lesson = df['2 period'].iloc[i]
+
+
+
+
+
+
+
+opt = Options()
 opt.add_argument("--disable-infobars")
 opt.add_argument("start-maximized")
 opt.add_argument("--disable-extensions")
@@ -23,16 +41,18 @@ opt.add_experimental_option("prefs", { \
 
 class   onlineclass():
     def __init__(self):
-        self.driver = webdriver.Chrome(chrome_options=opt, executable_path=r'D:\TOOLS-ISO-PROGGRAMING\project\onlineclass\chromedriver.exe')
+        self.driver = webdriver.Chrome(options=opt, executable_path=r'E:\TOOLS-ISO-PROGGRAMING\project\onlineclass\chromedriver.exe')
     def login(self):
-        self.driver.get('https://meetingsemea25.webex.com/meet/pr1524685744') 
+        self.driver.implicitly_wait(30)
+        self.driver.get(lesson) 
         sleep(5) 
 
         join_from_browser = self.driver.find_element_by_xpath('//*[@id="push_download_join_by_browser"]')
         join_from_browser.click()
-        sleep(5)
+        sleep(2)
         
         self.driver.switch_to.frame('pbui_iframe')
+        
         username_in = self.driver.find_element_by_xpath('//*[@id="meetingSimpleContainer"]/div[2]/div[2]/input')
         username_in.send_keys(username)
 
@@ -42,7 +62,9 @@ class   onlineclass():
         join_meeting = self.driver.find_element_by_xpath('//*[@id="guest_next-btn"]')
         join_meeting.click()
         sleep(3)
-        sleep(5)
+        #popup = self.driver.find_element_by_xpath('/html/body/div[4]/div[2]/div/div/div/div/div[1]/button')
+        #popup.click()
+        sleep(2)
     def mute(self):
         mute = self.driver.find_element_by_xpath('//*[@id="meetingSimpleContainer"]/div[3]/div[2]/div[1]/div/button')
         mute.click()
@@ -52,9 +74,26 @@ class   onlineclass():
     def join(self):
         join = self.driver.find_element_by_xpath('//*[@id="interstitial_join_btn"]')
         join.click()
+        while True:
+                try:
+                    self.driver.find_element_by_xpath('//*[@id="meetingSimpleContainer"]/div[1]/div[2]/div[3]/div/button')
+                    print (currenthour) 
+                except:
+                    break
+        print('yes')
+        sleep(3)
+        msg = self.driver.find_element_by_xpath('//*[@id="react_controlbar"]/div[2]/div[2]/div/button[2]')
+        msg.click()
+        msg_w = self.driver.find_element_by_xpath('/html/body/div[3]/div[4]/div/div/div/div[8]/div/div/div[3]/textarea')
+        msg_w.send_keys('καλημερα')
+        msg_w.send_keys(Keys.ENTER)
+    #def close(self):
+        #sleep(2520)
+        #self.driver.quit()
+
 bot = onlineclass()
 bot.login()         
 bot.mute()
 bot.video()
 bot.join()
-
+bot.close()
